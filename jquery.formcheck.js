@@ -1,7 +1,7 @@
 /**
  * Plug-In name: jquery.formCheck.js
- * Versions: 1.1.4
- * Modify time: 2016/11/14
+ * Versions: 1.1.5
+ * Modify time: 2017/02/17
  * Created by TomnTang on 2016/07/18
  * Website: http://www.lovevivi.com/plugin/jquery.formcheck.js/
  */
@@ -110,7 +110,6 @@
         function verify(id, value, event){
             var obj = {}, that = $('#'+id);
 
-            // debug.log('that= '+that[0]);
             if (!that[0]) {
                 layer.msg('id='+id+'不存在!');
                 return status = false;
@@ -149,22 +148,7 @@
                 }
             }
 
-            /*            switch (obj.tag) {
-             case 'SELECT':
-             debug.log('=======================  select  =======================');
-             break;
-             case 'INPUT':
-             debug.log('=======================   input  =======================');
-             break;
-             case 'TEXTAREA':
-             debug.log('======================= textarea =======================');
-             break;
-             default:
-             debug.log('=======================   other  =======================');
-             }*/
-
             debug.log('id= '+id+', value= '+JSON.stringify(value));
-            // debug.log('id tag= '+that.get(0).tagName+' type= '+that.attr('type')+' value= '+that.val()+' checked= '+that.prop('checked'));
 
             for (var i=0, length=obj.verify.length; i < length; i++ ) {
 
@@ -189,7 +173,7 @@
                     (event == 'onsubmit' || sort == 'ajax') && that[0].focus();
                     if (event != 'onoff') {
                         if (obj.callback && sort == 'ajax') {
-                            console.info('======= 开始调用callback data='+ data +' =======');
+                            debug.info('======= 开始调用callback data='+ data +' =======');
                             obj.callback(data, that);
                         } else {
                             (obj.onError) ? obj.onError(that) : layer.tips(obj.error, that, {tips: obj.position});

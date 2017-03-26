@@ -1,7 +1,7 @@
 /**
  * Plug-In name: jquery.formCheck.js
- * Versions: 1.1.6
- * Modify time: 2017/03/25
+ * Versions: 1.1.7
+ * Modify time: 2017/03/26
  * Created by TomnTang on 2016/07/18
  * Website: http://www.lovevivi.com/plugin/jquery.formcheck.js/
  */
@@ -19,8 +19,8 @@
         };
 
         win.formCheck = {
-            ver: 'Versions: 1.1.6',
-            time: 'Modify Time: 2017/03/25'
+            ver: 'Versions: 1.1.7',
+            time: 'Modify Time: 2017/03/26'
         };
 
         var reg = {
@@ -268,7 +268,7 @@
             var event = 'onblur';
             if (settings.onBlur) {
                 $.each(settings.items, function(id, value){
-                    if (value.onBlur != false) {
+                    if (value.onBlur !== false) {
                         $('#'+id).on('blur', function(){
                             verify(id, value, event);
                         });
@@ -276,7 +276,7 @@
                 });
             } else {
             	$.each(settings.items, function(id, value){
-                    if (value.onBlur != true) {
+                    if (value.onBlur === true) {
                         $('#'+id).on('blur', function(){
                             verify(id, value, event);
                         });

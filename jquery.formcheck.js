@@ -1,7 +1,7 @@
 /**
  * Plug-In name: jquery.formCheck.js
- * Versions: 1.1.7
- * Modify time: 2017/03/26
+ * Versions: 1.1.8
+ * Modify time: 2017/03/31
  * Created by TomnTang on 2016/07/18
  * Website: http://www.lovevivi.com/plugin/jquery.formcheck.js/
  */
@@ -15,12 +15,13 @@
             pass: false,
             passSubmit: null,
             beforeSubmit: null,
-            ajaxList: {}
+            ajaxList: {},
+            scope: false
         };
 
         win.formCheck = {
-            ver: 'Versions: 1.1.7',
-            time: 'Modify Time: 2017/03/26'
+            ver: 'Versions: 1.1.8',
+            time: 'Modify Time: 2017/03/31'
         };
 
         var reg = {
@@ -98,7 +99,7 @@
                 return (obj.value <= obj.max) ? true : false;
             }
         };
-        var settings = $.extend({}, defaults, options), status = true, debug = {
+        var settings = $.extend({}, defaults, options), status = true, formObj = this.selector, debug = {
             log: function(text){settings.debug && console.log(text);},
             error: function(text){settings.debug && console.error(text);},
             info: function(text){settings.debug && console.info(text);}
@@ -109,7 +110,7 @@
         }();
 
         function verify(id, value, event){
-            var obj = {}, that = $('#'+id);
+            var obj = {}, that = (settings.scope ? $(''+ formObj).find('#'+id) : $('#'+id));
 
             if (!that[0]) {
                 layer.msg('id='+id+'不存在!');
@@ -269,7 +270,8 @@
             if (settings.onBlur) {
                 $.each(settings.items, function(id, value){
                     if (value.onBlur !== false) {
-                        $('#'+id).on('blur', function(){
+                        var that = (settings.scope ? $(''+ formObj).find('#'+id) : $('#'+id));
+                        that.on('blur', function(){
                             verify(id, value, event);
                         });
                     }
@@ -277,7 +279,8 @@
             } else {
             	$.each(settings.items, function(id, value){
                     if (value.onBlur === true) {
-                        $('#'+id).on('blur', function(){
+                        var that = (settings.scope ? $(''+ formObj).find('#'+id) : $('#'+id));
+                        that.on('blur', function(){
                             verify(id, value, event);
                         });
                     }
@@ -287,7 +290,8 @@
             $.each(settings.items, function(id, value){
                 var isAjax = value.ajax ? value.ajax.url : '';
                 if (isAjax) {
-                    var val = $.trim($('#'+ id).val());
+                    var that = (settings.scope ? $(''+ formObj).find('#'+id) : $('#'+id));
+                    var val = $.trim(that.val());
                     var modifyState = (val != '') ? true : false;
                     settings.ajaxList[id] = {value: val, isCheck: modifyState};
                     debug.log('ajaxList= '+ JSON.stringify(settings.ajaxList));

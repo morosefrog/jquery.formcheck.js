@@ -1,7 +1,7 @@
 /**
  * Plug-In name: jquery.formCheck.js
- * Versions: 1.1.8
- * Modify time: 2017/03/31
+ * Versions: 1.1.9
+ * Modify time: 2017/04/10
  * Created by TomnTang on 2016/07/18
  * Website: http://www.lovevivi.com/plugin/jquery.formcheck.js/
  */
@@ -20,8 +20,8 @@
         };
 
         win.formCheck = {
-            ver: 'Versions: 1.1.8',
-            time: 'Modify Time: 2017/03/31'
+            ver: 'Versions: 1.1.9',
+            time: 'Modify Time: 2017/04/10'
         };
 
         var reg = {
@@ -194,6 +194,7 @@
                                 if ($(document.activeElement).context.type == 'submit') {
                                     that.parents('form').submit();
                                     clearTimeout(timer);
+                                    debug.log('ajax完成后，表单再次自动提交！');
                                 }
                             }, 1000);
                         } else {
@@ -201,11 +202,11 @@
                             debug.log('getEvent= '+ $(document.activeElement).context.type);
                             if ($(document.activeElement).context.type == 'submit') {
                                 that.parents('form').submit();
+                                debug.log('ajax完成后，表单再次自动提交！');
                             }
                         }
 
                         that.addClass('success').removeClass('error');
-                        debug.log('ajax完成后，表单再次自动提交！');
                     }
                 }
             }
@@ -262,6 +263,7 @@
                 }
             }
             debug.log('准备返回结果status='+ status);
+            if (isCallback == null && timer != null) { status = false; }
             return status;
         }
 
@@ -292,6 +294,7 @@
                 if (isAjax) {
                     var that = (settings.scope ? $(''+ formObj).find('#'+id) : $('#'+id));
                     var val = $.trim(that.val());
+                    if (value.ajax.check === true) { val = null; }
                     var modifyState = (val != '') ? true : false;
                     settings.ajaxList[id] = {value: val, isCheck: modifyState};
                     debug.log('ajaxList= '+ JSON.stringify(settings.ajaxList));

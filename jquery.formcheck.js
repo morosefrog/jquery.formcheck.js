@@ -1,7 +1,7 @@
 /**
  * Plug-In name: jquery.formCheck.js
- * Versions: 1.1.9
- * Modify time: 2017/04/10
+ * Versions: 1.2.0
+ * Modify time: 2017/06/30
  * Created by TomnTang on 2016/07/18
  * Website: http://www.lovevivi.com/plugin/jquery.formcheck.js/
  */
@@ -20,8 +20,8 @@
         };
 
         win.formCheck = {
-            ver: 'Versions: 1.1.9',
-            time: 'Modify Time: 2017/04/10'
+            ver: 'Versions: 1.2.0',
+            time: 'Modify Time: 2017/06/30'
         };
 
         var reg = {
@@ -99,7 +99,7 @@
                 return (obj.value <= obj.max) ? true : false;
             }
         };
-        var settings = $.extend({}, defaults, options), status = true, formObj = this.selector, debug = {
+        var settings = $.extend({}, defaults, options), status = true, submitMode = false, formObj = this.selector, debug = {
             log: function(text){settings.debug && console.log(text);},
             error: function(text){settings.debug && console.error(text);},
             info: function(text){settings.debug && console.info(text);}
@@ -116,6 +116,15 @@
                 layer.msg('id='+id+'不存在!');
                 return status = false;
             }
+
+            debug.log('event= '+ event);
+
+            if (event == 'onblur' && submitMode) {
+                return;
+            } else if (event == 'onsubmit') {
+                submitMode = true;
+            }
+
             obj.that = that;
             obj.id = id;
             obj.tag = that.get(0).tagName;
@@ -146,8 +155,7 @@
                 var _onoff = verify(_id, _value, 'onoff');
                 debug.info('onoff= '+_onoff);
                 if (!_onoff) {
-                    status = true;
-                    return;
+                    return status = true;
                 }
             }
 
@@ -183,6 +191,7 @@
                         }
                     }
                     that.addClass('error').removeClass('success');
+                    submitMode = false;
                     debug.error('======= ' + ((obj['verify'][i] === undefined) ? 'ajax' : obj['verify'][i]) + ' 未检测通过 ===========');
                 } else {
                     if (!settings.ajaxList[id]) {
@@ -262,7 +271,7 @@
                     return status;
                 }
             }
-            debug.log('准备返回结果status='+ status);
+            debug.log(event +'=>准备返回结果status='+ status);
             if (isCallback == null && timer != null) { status = false; }
             return status;
         }
@@ -279,7 +288,7 @@
                     }
                 });
             } else {
-            	$.each(settings.items, function(id, value){
+                $.each(settings.items, function(id, value){
                     if (value.onBlur === true) {
                         var that = (settings.scope ? $(''+ formObj).find('#'+id) : $('#'+id));
                         that.on('blur', function(){
@@ -312,7 +321,7 @@
         return this.each(function(){
             init();
             $(this).on('submit', function(){
-            	settings.beforeSubmit && settings.beforeSubmit();
+                settings.beforeSubmit && settings.beforeSubmit();
                 check();
                 if (status) {
                     debug.info('表单检测通过！');

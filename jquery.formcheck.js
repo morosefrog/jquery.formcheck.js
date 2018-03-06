@@ -1,7 +1,7 @@
 /**
  * Plug-In name: jquery.formCheck.js
- * Versions: 1.2.1
- * Modify time: 2017/07/06
+ * Versions: 1.2.2
+ * Modify time: 2018/03/06
  * Created by TomnTang on 2016/07/18
  * Website: http://www.lovevivi.com/plugin/jquery.formcheck.js/
  */
@@ -20,8 +20,8 @@
         };
 
         win.formCheck = {
-            ver: 'Versions: 1.2.1',
-            time: 'Modify Time: 2017/07/06',
+            ver: 'Versions: 1.2.2',
+            time: 'Modify Time: 2018/03/06',
             init: init
         };
 
@@ -145,6 +145,7 @@
             obj.ajaxType = (value.ajax && value.ajax.type) ? value.ajax.type : 'POST';
             obj.ajaxURL = (value.ajax && value.ajax.url) ? value.ajax.url : '';
             obj.callback = (value.ajax && value.ajax.callback) ? value.ajax.callback : null;
+            obj.ajaxDataListID = (value.ajax && value.ajax.dataListID) ? value.ajax.dataListID : '';
             obj.onoff = value.onoff || null;
 
             if (obj.onoff) {
@@ -229,6 +230,11 @@
                     loading = layer.load(0);
                     settings.ajaxList[id].value = obj.value;
                     argData[id] = obj.value;
+                    if (obj.ajaxDataListID.length) {
+                        $.each(obj.ajaxDataListID, function(index, id){
+                            argData[id] = $.trim($('#'+id).val());
+                        });
+                    }
                     debug.log(argData);
                     $.ajax({
                         type: obj.ajaxType,
